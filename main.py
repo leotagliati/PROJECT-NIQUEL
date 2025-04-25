@@ -8,6 +8,9 @@ import time
 # LEMBRAR: Preciso fazer isso para cada Display OLED
 i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
 
+# Configura o botão
+botao = Pin(1, Pin.IN, Pin.PULL_UP)  # Botão conectado ao pino GP2
+
 # Cria objeto do display OLED 128x32
 display = ssd1306.SSD1306_I2C(128, 32, i2c)
 
@@ -66,5 +69,6 @@ def spin_reel(duration_ms=2000, speed_ms=100):
         time.sleep_ms(speed_ms)
         current_icons = current_icons[1:] + current_icons[:1]
 
-
-spin_reel(10000, 100)
+while True:
+    if botao.value() == 0:
+        spin_reel(10000, 100)
