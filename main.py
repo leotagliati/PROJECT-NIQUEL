@@ -107,7 +107,7 @@ while True:
 
         # if resultado_nomes1[0] == "heart" and resultado_nomes2[0] == "heart": 
         if resultado_nomes1[0] == "heart" :
-            print("🎉 Você ganhou com um coração no meio!")
+            print("Ganhou!")
             buzzer.value(1)
             time.sleep(0.3)
             buzzer.value(0)
@@ -116,7 +116,7 @@ while True:
             time.sleep(0.6)
             buzzer.value(0)
         else:
-            print("😢 Tente novamente...")
+            print("Tente novamente...")
             buzzer.value(1)
             time.sleep(0.1)
             buzzer.value(0)
