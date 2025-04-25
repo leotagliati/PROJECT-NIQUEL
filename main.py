@@ -3,6 +3,7 @@ import ssd1306
 from icones import heart, sword,skull
 from display_utils import printIcon, buildIcon
 import time
+import random
       
 # Configura I2C no barramento 0 (com GP4 = SDA e GP5 = SCL)
 # LEMBRAR: Preciso fazer isso para cada Display OLED
@@ -44,7 +45,14 @@ display = ssd1306.SSD1306_I2C(128, 32, i2c)
 
 
 # Ícones disponíveis
-icons = [heart, sword, skull]
+icon_map = {
+    "heart": heart,
+    "sword": sword,
+    "skull": skull
+}
+
+iconNames = list(icon_map.keys())
+icons = list(icon_map.values())
 
 
 # LEMBRAR: Preciso fazer isso para cada Display OLED
@@ -60,15 +68,30 @@ def draw_single_reel(display, icon_list):
 
     display.show()
 
-def spin_reel(duration_ms=2000, speed_ms=100):
+def spin_reel(duration_ms=2000, speed_ms=0):
     start = time.ticks_ms()
     current_icons = icons[:]
 
     while time.ticks_diff(time.ticks_ms(), start) < duration_ms:
         draw_single_reel(display, current_icons)
-        time.sleep_ms(speed_ms)
+        if speed_ms > 0:
+            time.sleep_ms(speed_ms)  # só dorme se for maior que 0
         current_icons = current_icons[1:] + current_icons[:1]
+
+    return current_icons[:3]
 
 while True:
     if botao.value() == 0:
-        spin_reel(10000, 100)
+        tempo_de_espera = random.randint(2000, 7000)
+        resultado = spin_reel(tempo_de_espera, 0)  # roda por 3 segundos, depois para
+
+        resultado_nomes = [iconNames[icons.index(icon)] for icon in resultado]
+
+        print("Ícones finais:", resultado_nomes)
+
+        if resultado_nomes[0] == "heart":
+            print("🎉 Você ganhou com um coração no meio!")
+        else:
+            print("😢 Tente novamente...")
+
+        time.sleep(0.5)
