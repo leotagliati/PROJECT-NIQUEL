@@ -5,15 +5,23 @@ from display_utils import printIcon, buildIcon
 import time
 import random
       
-# Configura I2C no barramento 0 (com GP4 = SDA e GP5 = SCL)
+# Configura I2C no barramento 0 (com GP4 = SDA e GP5 = SCK)
 # LEMBRAR: Preciso fazer isso para cada Display OLED
-i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
+i2c_1 = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
+print("i2c_1:", i2c_1.scan())
+
+# Estamos com um problema, como utilizar 2 displays OLED sendo que ambos possuem o mesmo endereço?
+
+# i2c_2 = I2C(1, sda=Pin(2), scl=Pin(3), freq=400000)
+# print("i2c_2:", i2c_2.scan())
 
 # Configura o botão
 botao = Pin(1, Pin.IN, Pin.PULL_UP)  # Botão conectado ao pino GP2
 
 # Cria objeto do display OLED 128x32
-display = ssd1306.SSD1306_I2C(128, 32, i2c)
+display_1 = ssd1306.SSD1306_I2C(128, 32, i2c_1)
+# display_2 = ssd1306.SSD1306_I2C(128, 32, i2c_2)
+
 
 # -------- TESTE DE ICONE --------
 # icon = heart
@@ -68,7 +76,7 @@ def draw_single_reel(display, icon_list):
 
     display.show()
 
-def spin_reel(duration_ms=2000, speed_ms=0):
+def spin_reel(display ,duration_ms=2000, speed_ms=0):
     start = time.ticks_ms()
     current_icons = icons[:]
 
@@ -83,13 +91,16 @@ def spin_reel(duration_ms=2000, speed_ms=0):
 while True:
     if botao.value() == 0:
         tempo_de_espera = random.randint(2000, 7000)
-        resultado = spin_reel(tempo_de_espera, 0)  # roda por 3 segundos, depois para
+        resultado1 = spin_reel(display_1,tempo_de_espera, 0)  # roda por 3 segundos, depois para
+        # resultado2 = spin_reel(display_2,tempo_de_espera, 0)  # roda por 3 segundos, depois para
 
-        resultado_nomes = [iconNames[icons.index(icon)] for icon in resultado]
+        resultado_nomes1 = [iconNames[icons.index(icon)] for icon in resultado1]
+        # resultado_nomes2 = [iconNames[icons.index(icon)] for icon in resultado2]
 
-        print("Ícones finais:", resultado_nomes)
+        print("Ícones finais:", resultado_nomes1)
 
-        if resultado_nomes[0] == "heart":
+        # if resultado_nomes1[0] == "heart" and resultado_nomes2[0] == "heart": 
+        if resultado_nomes1[0] == "heart" :
             print("🎉 Você ganhou com um coração no meio!")
         else:
             print("😢 Tente novamente...")
