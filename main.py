@@ -22,6 +22,10 @@ botao = Pin(1, Pin.IN, Pin.PULL_UP)  # Botão conectado ao pino GP2
 display_1 = ssd1306.SSD1306_I2C(128, 32, i2c_1)
 # display_2 = ssd1306.SSD1306_I2C(128, 32, i2c_2)
 
+# Configura buzzer na porta GP15
+buzzer = Pin(15, Pin.OUT)
+
+# Liga o buzzer por 1 segundo
 
 # -------- TESTE DE ICONE --------
 # icon = heart
@@ -88,6 +92,8 @@ def spin_reel(display ,duration_ms=2000, speed_ms=0):
 
     return current_icons[:3]
 
+
+draw_single_reel(display_1, icons)  # Desenha os ícones iniciais
 while True:
     if botao.value() == 0:
         tempo_de_espera = random.randint(2000, 7000)
@@ -97,12 +103,25 @@ while True:
         resultado_nomes1 = [iconNames[icons.index(icon)] for icon in resultado1]
         # resultado_nomes2 = [iconNames[icons.index(icon)] for icon in resultado2]
 
-        print("Ícones finais:", resultado_nomes1)
+        # print("Ícones finais:", resultado_nomes1)
 
         # if resultado_nomes1[0] == "heart" and resultado_nomes2[0] == "heart": 
         if resultado_nomes1[0] == "heart" :
             print("🎉 Você ganhou com um coração no meio!")
+            buzzer.value(1)
+            time.sleep(0.3)
+            buzzer.value(0)
+            time.sleep(0.1)
+            buzzer.value(1)
+            time.sleep(0.6)
+            buzzer.value(0)
         else:
             print("😢 Tente novamente...")
-
+            buzzer.value(1)
+            time.sleep(0.1)
+            buzzer.value(0)
+            time.sleep(0.1)
+            buzzer.value(1)
+            time.sleep(0.1)
+            buzzer.value(0)
         time.sleep(0.5)
