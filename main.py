@@ -25,7 +25,7 @@ display_1 = ssd1306.SSD1306_I2C(128, 32, i2c_1)
 # Configura buzzer na porta GP15
 buzzer = Pin(15, Pin.OUT)
 ledVitoria = Pin(27, Pin.OUT)  # LED de vitória na porta GP26
-ledDerrota = Pin(26, Pin.OUT)  # LED de derrota na porta GP27
+ledDerrota = Pin(28, Pin.OUT)  # LED de derrota na porta GP27
 
 # Liga o buzzer por 1 segundo
 
@@ -96,9 +96,13 @@ def spin_reel(display ,duration_ms=2000, speed_ms=0):
 
 
 draw_single_reel(display_1, icons)  # Desenha os ícones iniciais
+ledDerrota.value(0)
+ledVitoria.value(0)
+
 while True:
     if botao.value() == 0:
-        
+        ledVitoria.value(0)
+        ledDerrota.value(0)
         
         tempo_de_espera = random.randint(2000, 7000)
         resultado1 = spin_reel(display_1,tempo_de_espera, 0)  # roda por 3 segundos, depois para
@@ -111,8 +115,8 @@ while True:
 
         # if resultado_nomes1[0] == "heart" and resultado_nomes2[0] == "heart": 
         if resultado_nomes1[0] == "heart" :
-            ledVitoria.value(1)
             print("Ganhou!")
+            ledVitoria.value(1)
             buzzer.value(1)
             time.sleep(0.3)
             buzzer.value(0)
@@ -122,7 +126,7 @@ while True:
             buzzer.value(0)
             time.sleep(0.6)
             time.sleep(2)
-            # ledVitoria.value(0)
+            ledVitoria.value(0)
         else:
             print("Tente novamente...")
             ledDerrota.value(1)
@@ -134,5 +138,5 @@ while True:
             time.sleep(0.1)
             buzzer.value(0)
             time.sleep(2)
-            # ledDerrota.value(0)
+            ledDerrota.value(0)
         time.sleep(0.5)
