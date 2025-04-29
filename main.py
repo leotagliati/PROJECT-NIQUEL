@@ -4,8 +4,10 @@ import framebuf, sys
 import utime
 from icones import heart, sword,skull
 from display_utils import printIcon, buildIcon
+from reel_utils import draw_single_reel, spin_reel_async, init_reel
 import time
 import random
+import uasyncio as asyncio
 
 pix_res_x = 128
 pix_res_y = 32
@@ -34,61 +36,64 @@ icon_map = {
 iconNames = list(icon_map.keys())
 icons = list(icon_map.values())
 
-def main():
+async def main():
     i2c_dev = init_i2c(scl_pin=27, sda_pin=26, barramento=1)
     i2c_2dev = init_i2c(scl_pin=1, sda_pin=0,barramento=0)
     
     oled = SSD1306_I2C(pix_res_x, pix_res_y, i2c_dev)
     oled_2 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_2dev)
     
-    oled.text("Hello World!", 0, 0)
-    oled.show()
+    iconsChosen_1 = init_reel(oled, icons)
+    iconsChosen_2 = init_reel(oled_2, icons)
     
-    oled_2.text("Hello World!", 0, 0)
-    oled_2.show()
-    
-    # i2c_3dev = init_i2c(scl_pin=3, sda_pin=2,barramento=1)
-    # oled_3 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_3dev)
-    # oled_3.text("Hello World!", 0, 0)
-    # oled_3.show()
     
     start_spin_button = Pin(15, Pin.IN, Pin.PULL_UP)
     victory_led = Pin(16, Pin.OUT)
+    victory_led.value(0)
+    
     defeat_led = Pin(17, Pin.OUT)
+    defeat_led.value(0)
+        
     buzzer = Pin(14, Pin.OUT)
     
+    result_1 = None
+    result_2 = None
     while True:
         if start_spin_button.value() == 0:
             print("Button Pressed")
-            oled.fill(0)
-            oled.text("Button Pressed", 0, 0)
-            oled.show()
             
-            oled_2.fill(0)
-            oled_2.text("Button Pressed", 0, 0)
-            oled_2.show()
+            result_1, result_2 = await asyncio.gather(
+            spin_reel_async(oled, iconsChosen_1, duration_ms=random.randint(5000, 10000), speed_ms=100),
+            spin_reel_async(oled_2, iconsChosen_2, duration_ms=random.randint(5000, 10000), speed_ms=100)
+            )
+
+            print("Spinning Reels Ended")
             
-            utime.sleep(1)
-            
-            oled.fill(0)
-            oled.text("Hello World!", 0, 0)
-            oled.show()
-            
-            oled_2.fill(0)
-            oled_2.text("Hello World!", 0, 0)
-            oled_2.show()
-            
-            victory_led.value(1)
-            defeat_led.value(1)
-            buzzer.value(1)
-            time.sleep(0.07)
-            
-            buzzer.value(0)
-            victory_led.value(0)
-            defeat_led.value(0)
-            
-            
+            if(result_1[0] == result_2[0]):
+                print("You Win!")
+                victory_led.value(1)
+                buzzer.value(1)
+                await asyncio.sleep(0.3)
+                buzzer.value(0)
+                await asyncio.sleep(0.1)
+                buzzer.value(1)
+                await asyncio.sleep(0.6)
+                buzzer.value(0)
+                victory_led.value(0)
+                await asyncio.sleep(0.6)
+                
+            else:
+                print("Try Again...")
+                defeat_led.value(1)
+                buzzer.value(1)
+                await asyncio.sleep(0.1)
+                buzzer.value(0)
+                await asyncio.sleep(0.6)
+                defeat_led.value(0)
+                await asyncio.sleep(0.6)
             
             
 if __name__ == '__main__':
-    main()
+    loop = asyncio.get_event_loop()  
+    loop.create_task(main())  # Create a task to run the main function
+    loop.run_forever()  # Run the event loop indefinitely
