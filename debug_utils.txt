@@ -1,40 +1,5 @@
-from machine import Pin, I2C
-from ssd1306 import SSD1306_I2C
-import framebuf, sys
-import utime
-from icones import heart, sword,skull
-from display_utils import printIcon, buildIcon
-import time
-import random
-
-pix_res_x = 128
-pix_res_y = 32
-
-def init_i2c(scl_pin, sda_pin,barramento):
-    # Initialize I2C device
-    i2c = I2C(barramento, scl=Pin(scl_pin), sda=Pin(sda_pin), freq=200000)
-    i2c_addr = [hex(ii) for ii in i2c.scan()]
+    ------------TESTE COMPONENTES MAIN--------------
     
-    if not i2c_addr:
-        print('No I2C Display Found')
-        sys.exit()
-    else:
-        print("I2C Address      : {}".format(i2c_addr[0]))
-        print("I2C Configuration: {}".format(i2c))
-    
-    return i2c
-
-# Ícones disponíveis
-icon_map = {
-    "heart": heart,
-    "sword": sword,
-    "skull": skull
-}
-
-iconNames = list(icon_map.keys())
-icons = list(icon_map.values())
-
-def main():
     i2c_dev = init_i2c(scl_pin=27, sda_pin=26, barramento=1)
     i2c_2dev = init_i2c(scl_pin=1, sda_pin=0,barramento=0)
     
@@ -87,8 +52,3 @@ def main():
             victory_led.value(0)
             defeat_led.value(0)
             
-            
-            
-            
-if __name__ == '__main__':
-    main()

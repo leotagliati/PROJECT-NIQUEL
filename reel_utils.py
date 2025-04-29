@@ -69,18 +69,18 @@ display_1 = SSD1306_I2C(128, 32, i2c_0)
 # icons = list(icon_map.values())
 
 
-# # LEMBRAR: Preciso fazer isso para cada Display OLED
-# def draw_single_reel(display, icon_list):
-#     display.fill(0)
-#     x_offsets = [0, 48, 96]  
+# LEMBRAR: Preciso fazer isso para cada Display OLED
+def draw_single_reel(display, icon_list):
+    display.fill(0)
+    x_offsets = [0, 48, 96]  
 
-#     for i, icon in enumerate(icon_list[:3]):
-#         icon_rotated = buildIcon(icon)  
-#         x = x_offsets[i]
-#         y = 0
-#         printIcon(display, icon_rotated, x, y)
+    for i, icon in enumerate(icon_list[:3]):
+        icon_rotated = buildIcon(icon)  
+        x = x_offsets[i]
+        y = 0
+        printIcon(display, icon_rotated, x, y)
 
-#     display.show()
+    display.show()
 
 # def spin_reel(display ,duration_ms=2000, speed_ms=0):
 #     start = time.ticks_ms()
