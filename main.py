@@ -70,6 +70,18 @@ async def main():
         if start_spin_button.value() == 0:
             print("Button Pressed")
             
+            i2c_dev = init_i2c(scl_pin=27, sda_pin=26, barramento=1)
+            i2c_2dev = init_i2c(scl_pin=1, sda_pin=0,barramento=0)
+            i2c_3dev = init_i2c(scl_pin=5, sda_pin=4,barramento=0)
+
+            oled = SSD1306_I2C(pix_res_x, pix_res_y, i2c_dev)
+            oled_2 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_2dev)
+            oled_3 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_3dev)
+
+            iconsChosen_1 = init_reel(oled, icons)
+            iconsChosen_2 = init_reel(oled_2, icons)
+            iconsChosen_3 = init_reel(oled_3, icons)
+            
             result_1, result_2 = await asyncio.gather(
             spin_reel_async(oled, iconsChosen_1, duration_ms=random.randint(5000, 10000), speed_ms=100),
             spin_reel_async(oled_2, iconsChosen_2, duration_ms=random.randint(5000, 10000), speed_ms=100),
