@@ -13,7 +13,7 @@ def buildIcon(icon, orientation="horizontal"):
         newRow = ""
         for y in range(rows - 1, -1, -1):
             if orientation == "horizontal":
-                newRow += icon[y][x]
+                newRow += icon[-y][x]
             elif orientation == "vertical":
                 newRow += icon[x][y] 
         icon_rotated.append(newRow)
