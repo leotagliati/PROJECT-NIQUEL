@@ -1,5 +1,11 @@
 # 🎰 PROJECT-NIQUEL com Raspberry Pi Pico (OLÁ PROFESSORES SERGIO E FRANÇA)
 
+NOMES:                              RAs:
+LEONARDO TAGLIATI DA SILVA          22.00170-0
+ARTHUR JIN WOO LEE                  22.01519-0
+FERNANDO MINHARRO ALVES GIMENEZ     22.00833-0
+LEONARDO HENRIQUE DIAS MOURA        21.01837-5
+
 Este projeto consiste em uma **máquina caça-níquel interativa** utilizando o **Raspberry Pi Pico** e periféricos eletrônicos como botões, LEDs e buzzer. A proposta foi desenvolver um sistema completo, com integração entre hardware e software, utilizando boas práticas de desenvolvimento, controle de versão e trabalho em equipe.
 
 ---
