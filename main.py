@@ -1,11 +1,9 @@
 from machine import Pin, I2C
 from ssd1306 import SSD1306_I2C,SSD1306
-import framebuf, sys
-import utime
+import sys
 from icones import heart, sword,skull
 from display_utils import printIcon, buildIcon
 from reel_utils import draw_single_reel, spin_reel_async, init_reel
-import time
 import random
 import uasyncio as asyncio
 
@@ -66,6 +64,7 @@ async def main():
     result_1 = None
     result_2 = None
     result_3 = None
+    
     while True:
         if start_spin_button.value() == 0:
             print("Button Pressed")

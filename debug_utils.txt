@@ -1,93 +1,21 @@
-    ------------TESTE COMPONENTES MAIN--------------
-    
-    i2c_dev = init_i2c(scl_pin=27, sda_pin=26, barramento=1)
-    i2c_2dev = init_i2c(scl_pin=1, sda_pin=0,barramento=0)
-    
-    oled = SSD1306_I2C(pix_res_x, pix_res_y, i2c_dev)
-    oled_2 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_2dev)
-    
-    oled.text("Hello World!", 0, 0)
-    oled.show()
-    
-    oled_2.text("Hello World!", 0, 0)
-    oled_2.show()
-    
-    # i2c_3dev = init_i2c(scl_pin=3, sda_pin=2,barramento=1)
-    # oled_3 = SSD1306_I2C(pix_res_x, pix_res_y, i2c_3dev)
-    # oled_3.text("Hello World!", 0, 0)
-    # oled_3.show()
-    
-    start_spin_button = Pin(15, Pin.IN, Pin.PULL_UP)
-    victory_led = Pin(16, Pin.OUT)
-    defeat_led = Pin(17, Pin.OUT)
-    buzzer = Pin(14, Pin.OUT)
-    
-    while True:
-        if start_spin_button.value() == 0:
-            print("Button Pressed")
-            oled.fill(0)
-            oled.text("Button Pressed", 0, 0)
-            oled.show()
-            
-            oled_2.fill(0)
-            oled_2.text("Button Pressed", 0, 0)
-            oled_2.show()
-            
-            utime.sleep(1)
-            
-            oled.fill(0)
-            oled.text("Hello World!", 0, 0)
-            oled.show()
-            
-            oled_2.fill(0)
-            oled_2.text("Hello World!", 0, 0)
-            oled_2.show()
-            
-            victory_led.value(1)
-            defeat_led.value(1)
-            buzzer.value(1)
-            time.sleep(0.07)
-            
-            buzzer.value(0)
-            victory_led.value(0)
-            defeat_led.value(0)
+    ------------TESTE PINOS raspberry PI PICO--------------
+    from machine import Pin
+import time
 
----------- TESTE ASYNC ---------------
+# Lista com os números dos pinos GPIO que você quer testar (0 a 28 no Pico)
+gpio_pins = [i for i in range(29)]
 
+# Cria um dicionário de pinos configurados como entrada
+entradas = {i: Pin(i, Pin.IN, Pin.PULL_DOWN) for i in gpio_pins}
 
-
-
-# Rui Santos & Sara Santos - Random Nerd Tutorials
-# Complete project details at https://RandomNerdTutorials.com/micropython-raspberry-pi-pico-asynchronous-programming/
-
-import asyncio
-from machine import Pin
-
-green_led_pin = 16
-green_led = Pin(green_led_pin, Pin.OUT)
-blue_led_pin = 17
-blue_led = Pin(blue_led_pin, Pin.OUT)
-
-# Define coroutine function
-async def blink_green_led():
-    while True:
-        green_led.toggle()
-        await asyncio.sleep(2) 
-
-# Define coroutine function
-async def blink_blue_led():
-    while True:
-        blue_led.toggle()
-        await asyncio.sleep(0.5)
-
-# Define the main function to run the event loop
-async def main():
-    # Create tasks for blinking two LEDs concurrently
-    asyncio.create_task(blink_green_led())
-    asyncio.create_task(blink_blue_led())
-
-# Create and run the event loop
-loop = asyncio.get_event_loop()  
-loop.create_task(main())  # Create a task to run the main function
-loop.run_forever()  # Run the event loop indefinitely
-            
+while True:
+    print("Estado dos GPIOs:")
+    for i in gpio_pins:
+        try:
+            estado = entradas[i].value()
+            print(f"GPIO{i:02d}: {estado}", end=' | ')
+        except Exception as e:
+            # Caso o pino não esteja disponível (alguns são reservados), ignora
+            print(f"GPIO{i:02d}: Erro", end=' | ')
+    print("\n------------------------------")
+    time.sleep(1)
